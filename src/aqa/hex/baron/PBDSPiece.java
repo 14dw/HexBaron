@@ -14,19 +14,19 @@ class PBDSPiece extends Piece {                                                 
 
     @Override                                                                                                           // Override method in super class
     public int checkMoveIsValid(int distanceBetweenTiles, String startTerrain, String endTerrain) {                     // Calculate the fuel needed to move, -1 if move is impossible
-        if (distanceBetweenTiles != 1 || startTerrain.equals("~")) {    //
+        if (distanceBetweenTiles != 1 || startTerrain.equals("~")) {                                                    // Check that tiles are adjacent and not starting on peat
             return -1;
         }
         return fuelCostOfMove;
     }
 
-    public int dig(String terrain) {
-        if (!terrain.equals("~")) {
+    public int dig(String terrain) {                                                                                    // Method to dig on tile
+        if (!terrain.equals("~")) {                                                                                     // If terrain is not peat then cannot dig
             return 0;
         }
-        if (rNoGen.nextFloat() < 0.9) {
+        if (rNoGen.nextFloat() < 0.9) {                                                                                 // 90% probability of digging 1
             return 1;
-        } else {
+        } else {                                                                                                        // 10% probability of digging 5
             return 5;
         }
     }
