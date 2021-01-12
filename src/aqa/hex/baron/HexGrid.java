@@ -240,37 +240,37 @@ class HexGrid {
         }
     }
 
-    public Object[] destroyPiecesAndCountVPs(int player1VPs, int player2VPs) {
-        boolean baronDestroyed = false;
-        List<Tile> listOfTilesContainingDestroyedPieces = new ArrayList<>();
-        for (Tile t : tiles) {
+    public Object[] destroyPiecesAndCountVPs(int player1VPs, int player2VPs) { // This method is run after the end of each turn - It does what it says in the interface
+        boolean baronDestroyed = false;     // This is ultimately the game's win condition
+        List<Tile> listOfTilesContainingDestroyedPieces = new ArrayList<>();      // Maintains a List of tiles with a newly destroyed piece
+        for (Tile t : tiles) {                                                    // Iterates through all the tiles
             if (t.getPieceInTile() != null) {
                 List<Tile> listOfNeighbours = new ArrayList<>(t.getNeighbours());
-                int noOfConnections = 0;
-                for (Tile n : listOfNeighbours) {
+                int noOfConnections = 0;                                          // Int for number of connections for the current tile
+                for (Tile n : listOfNeighbours) {                                 // Use list of neighbours to find connections
                     if (n.getPieceInTile() != null) {
                         noOfConnections += 1;
                     }
                 }
                 Piece thePiece = t.getPieceInTile();
-                if (noOfConnections >= thePiece.getConnectionsNeededToDestroy()) {
-                    thePiece.destroyPiece();
-                    if (thePiece.getPieceType().toUpperCase().equals("B")) {
+                if (noOfConnections >= thePiece.getConnectionsNeededToDestroy()) { // Check number of connections
+                    thePiece.destroyPiece();                                       // Destroy piece if there are too many
+                    if (thePiece.getPieceType().toUpperCase().equals("B")) {       // Check if it's a baron
                         baronDestroyed = true;
                     }
-                    listOfTilesContainingDestroyedPieces.add(t);
-                    if (thePiece.getBelongsToplayer1()) {
-                        player2VPs += thePiece.getVPs();
+                    listOfTilesContainingDestroyedPieces.add(t);                   // Add tile to list of destroyed
+                    if (thePiece.getBelongsToplayer1()) {                          // Check which player the points need to be given to
+                        player2VPs += thePiece.getVPs();                           // Give VPs to that player
                     } else {
                         player1VPs += thePiece.getVPs();
                     }
                 }
             }
         }
-        for (Tile t : listOfTilesContainingDestroyedPieces) {
-            t.setPiece(null);
-        }
-        return new Object[]{baronDestroyed, player1VPs, player2VPs};
+        for (Tile t : listOfTilesContainingDestroyedPieces) {                      // Go through every tile with a newly destroyed piece
+            t.setPiece(null);                                                      // Set the piece in the tile to null
+        }                                                                          // Now that tile no longer has a piece in it
+        return new Object[]{baronDestroyed, player1VPs, player2VPs};               // Returns win condition and the VPs after they have been changed
     }
 
     public String getGridAsString(boolean P1Turn) {
