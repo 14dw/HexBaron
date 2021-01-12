@@ -5,26 +5,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 class HexGrid {
-    protected List<Tile> tiles = new ArrayList<>();
-    protected List<Piece> pieces = new ArrayList<>();
-    protected int size;
-    protected boolean player1Turn;
+    protected List<Tile> tiles = new ArrayList<>(); // List of the tiles in the grid
+    protected List<Piece> pieces = new ArrayList<>(); // lists the pieices in the game,
+    protected int size; // the width of the grid
+    protected boolean player1Turn; // boolean which if is true means its player 1's turn
 
-    public HexGrid(int n) {
+
+
+
+    public HexGrid(int n) { // this is a constructor for the HexGrid Class, it sets the size of the grid and then sets up the tiles, and finds the neighbours of the tiles.
         size = n;
         setUpTiles();
         setUpNeighbours();
         player1Turn = true;
     }
 
-    public void setUpGridTerrain(List<String> listOfTerrain) {
+    public void setUpGridTerrain(List<String> listOfTerrain) { // takes in the terrain from input
         for (int count = 0; count < listOfTerrain.size(); count++) {
-            tiles.get(count).setTerrain(listOfTerrain.get(count));
+            tiles.get(count).setTerrain(listOfTerrain.get(count)); // gets the tile form the tiles list at count and sets the terrain from the list listOfTerrain
         }
     }
 
-    public void addPiece(boolean belongsToplayer1, String typeOfPiece, int location) {
-        Piece newPiece;
+    public void addPiece(boolean belongsToplayer1, String typeOfPiece, int location) { // determines the location, type of peice and whether the tile belongs to player 1
+        Piece newPiece;  //
         switch (typeOfPiece) {
             case "Baron":
                 newPiece = new BaronPiece(belongsToplayer1);
@@ -43,7 +46,7 @@ class HexGrid {
         tiles.get(location).setPiece(newPiece);
     }
 
-    public Object[] executeCommand(List<String> items, int fuelChange, int lumberChange,
+    public Object[] executeCommand(List<String> items, int fuelChange, int lumberChange, // Checks what type of command is input and does some checks to see if that command can be executed
                                    int supplyChange, int fuelAvailable, int lumberAvailable,
                                    int piecesInSupply) {
         int lumberCost;
@@ -84,15 +87,15 @@ class HexGrid {
         return new Object[]{"Command executed", fuelChange, lumberChange, supplyChange};
     }
 
-    private boolean checkTileIndexIsValid(int tileToCheck) {
+    private boolean checkTileIndexIsValid(int tileToCheck) { // Checks if the tile index bigger than or equal to 0 and smaller than the tile list size
         return tileToCheck >= 0 && tileToCheck < tiles.size();
     }
 
-    private boolean checkPieceAndTileAreValid(int tileToUse) {
+    private boolean checkPieceAndTileAreValid(int tileToUse) { // Checks if the current piece and tile are valid
         if (checkTileIndexIsValid(tileToUse)) {
             Piece thePiece = tiles.get(tileToUse).getPieceInTile();
             if (thePiece != null) {
-                if (thePiece.getBelongsToplayer1() == player1Turn) {
+                if (thePiece.getBelongsToplayer1() == player1Turn) { // Checks whether piece belongs to the player whose turn it is currently
                     return true;
                 }
             }
@@ -100,7 +103,7 @@ class HexGrid {
         return false;
     }
 
-    private Object[] executeCommandInTile(List<String> items, int fuel, int lumber) {
+    private Object[] executeCommandInTile(List<String> items, int fuel, int lumber) { // Executes saw and dig commands
         int tileToUse = Integer.parseInt(items.get(1));
         if (checkPieceAndTileAreValid(tileToUse) == false) {
             return new Object[]{false, fuel, lumber};
@@ -228,10 +231,10 @@ class HexGrid {
     }
 
     private void setUpNeighbours() {
-        for (Tile fromTile : tiles) {
-            for (Tile toTile : tiles) {
-                if (fromTile.getDistanceToTileT(toTile) == 1) {
-                    fromTile.addToNeighbours(toTile);
+        for (Tile fromTile : tiles) { // iterates over the tiles list
+            for (Tile toTile : tiles) { //iterates over the tiles list
+                if (fromTile.getDistanceToTileT(toTile) == 1) { //checks the distance between the from tile and the toTile,
+                    fromTile.addToNeighbours(toTile); // if they are next to each other the ToTile is added to the neighbours of the fromTile
                 }
             }
         }
